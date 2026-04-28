@@ -1,0 +1,13 @@
+node_modules
+dashboard/node_modules
+server/node_modules
+dashboard/dist
+server/dist
+server/data
+.git
+.env
+server/.env
+*.log
+*.db
+*.db-shm
+*.db-wal

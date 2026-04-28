@@ -188,6 +188,28 @@ http://localhost:3000
 
 The SQLite database is stored in the Docker volume mounted at `/data`.
 
+## Deploy on Coolify
+
+This project works best on Coolify as a single **Dockerfile-based Application**.
+
+Quick setup:
+
+1. Create a new Application from your Git repository
+2. Select **Dockerfile** deployment
+3. Use the repository root `Dockerfile`
+4. Set the application port to `3000`
+5. Add persistent storage mounted to `/data`
+6. Add runtime environment variables from [coolify.env.example](./coolify.env.example)
+7. Add your domain and deploy
+
+Important notes:
+
+- The SQLite database must persist at `/data`
+- Recommended runtime env includes `ADMIN_PASSWORD`, `JWT_SECRET`, `EXTENSION_TOKEN`, and `DB_PATH=/data/gateway.db`
+- Coolify can handle HTTPS and reverse proxy automatically, so `nginx.conf` is not needed for the default setup
+
+Full guide: [DEPLOY_COOLIFY.md](./DEPLOY_COOLIFY.md)
+
 ## VPS Deployment
 
 For a simple VPS deployment:
