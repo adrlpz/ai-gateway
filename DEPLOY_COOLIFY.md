@@ -66,6 +66,7 @@ Notes:
 
 - Set these as **runtime variables**
 - Build variables are not required for this project
+- Do not put `NODE_ENV=production`, `ADMIN_PASSWORD`, `JWT_SECRET`, or `EXTENSION_TOKEN` into Coolify build variables for this app
 - Use a strong `ADMIN_PASSWORD`
 - Use a long random `JWT_SECRET`
 - `EXTENSION_TOKEN` must match the token configured in the Chrome extension
@@ -137,6 +138,12 @@ https://your-domain/anthropic
 - Confirm Coolify routes traffic to port `3000`
 - Check the application logs in Coolify
 - Confirm the health endpoint responds on `/health`
+
+### Build fails with `sh: tsc: not found`
+
+- This usually means Coolify passed production-style environment into the build step and dev dependencies were skipped
+- Keep secrets and `NODE_ENV=production` as runtime variables, not build variables
+- The project Dockerfile now forces dev dependencies in the build stages, so redeploy after pulling the latest commit
 
 ### Data disappears after redeploy
 

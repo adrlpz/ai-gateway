@@ -3,16 +3,18 @@ WORKDIR /app
 
 # ── Install dashboard deps & build ──────────────────────────────────────────
 FROM base AS dashboard-build
+ENV NODE_ENV=development
 COPY dashboard/package*.json ./dashboard/
-RUN cd dashboard && npm install
+RUN cd dashboard && npm install --include=dev
 COPY dashboard ./dashboard
 RUN cd dashboard && npm run build
 
 # ── Install server deps & build ──────────────────────────────────────────────
 FROM base AS server-build
+ENV NODE_ENV=development
 COPY server/package*.json ./server/
 COPY server/tsconfig.json ./server/
-RUN cd server && npm install
+RUN cd server && npm install --include=dev
 COPY server/src ./server/src
 RUN cd server && npm run build
 
