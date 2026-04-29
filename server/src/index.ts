@@ -4,6 +4,7 @@ import { randomUUID } from "crypto";
 import express from "express";
 import cors from "cors";
 import { join, dirname } from "path";
+import { existsSync } from "fs";
 import { fileURLToPath } from "url";
 import { openaiRouter } from "./routes/openai.js";
 import { anthropicRouter } from "./routes/anthropic.js";
@@ -17,6 +18,14 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
 const HOST = process.env.HOST ?? "0.0.0.0";
+
+function resolveDashboardDist(): string {
+  const candidates = [
+    join(__dirname, "../../dashboard/dist"), // local repo layout: server/dist -> repo/dashboard/dist
+    join(__dirname, "../dashboard/dist"),    // docker image layout: /app/dist -> /app/dashboard/dist
+  ];
+  return candidates.find(candidate => existsSync(join(candidate, "index.html"))) ?? candidates[0];
+}
 
 // ─── Middleware ────────────────────────────────────────────────────────────────
 
@@ -246,7 +255,7 @@ app.post("/ext/cookies/:providerId", (req, res) => {
 
 // ─── Static dashboard ─────────────────────────────────────────────────────────
 
-const dashboardDist = join(__dirname, "../../dashboard/dist");
+const dashboardDist = resolveDashboardDist();
 app.use(express.static(dashboardDist));
 app.get("*", (_req, res) => {
   res.sendFile(join(dashboardDist, "index.html"), (err) => {
